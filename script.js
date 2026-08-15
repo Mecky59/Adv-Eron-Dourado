@@ -9,15 +9,23 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Mobile menu toggle (simple version)
+    // Mobile menu toggle
     const mobileToggle = document.querySelector('.mobile-toggle');
     const navLinks = document.querySelector('.nav-links');
 
-    if (mobileToggle) {
+    if (mobileToggle && navLinks) {
         mobileToggle.addEventListener('click', () => {
-            // For a production app, you'd add a dedicated mobile menu drawer here.
-            // For now, we simply toggle display if needed or keep it simple.
-            alert('Menu mobile acionado! (Adicione uma classe para mostrar o menu drawer aqui)');
+            navLinks.classList.toggle('active');
+            mobileToggle.classList.toggle('active');
+        });
+        
+        // Fechar ao clicar em um link
+        const links = navLinks.querySelectorAll('a');
+        links.forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                mobileToggle.classList.remove('active');
+            });
         });
     }
 
@@ -102,5 +110,66 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Inicia o ciclo
         playWave();
+    }
+
+    // Nav Highlighter Animation
+    const navLinksContainer = document.querySelector('.nav-links');
+    const navItems = document.querySelectorAll('.nav-links a');
+    const highlighter = document.getElementById('nav-highlighter');
+    
+    if (navLinksContainer && navItems.length > 0 && highlighter) {
+        let currentIndex = 2; // Começa no Diagnóstico (índice 2)
+
+        function updateHighlighter(index) {
+            const target = navItems[index];
+            
+            highlighter.style.width = `${target.offsetWidth}px`;
+            highlighter.style.height = `${target.offsetHeight}px`;
+            highlighter.style.transform = `translate(${target.offsetLeft}px, ${target.offsetTop}px)`;
+            
+            // Remove a classe para esconder a linha antes de desenhar
+            highlighter.classList.remove('drawn');
+            void highlighter.offsetWidth; // reflow
+            
+            // Depois do tempo de movimento (0.4s), começa a desenhar
+            setTimeout(() => {
+                highlighter.classList.add('drawn');
+            }, 400); 
+        }
+        
+        // Setup inicial
+        setTimeout(() => updateHighlighter(currentIndex), 100);
+
+        setInterval(() => {
+            // Apaga a borda atual (leva 0.8s no CSS)
+            highlighter.classList.remove('drawn');
+            
+            setTimeout(() => {
+                // Vai para o próximo item (1 -> 0 -> 2 pra seguir a fala, ou simplesmente sequencial)
+                if (currentIndex === 2) currentIndex = 1;      // de diagnóstico pra áreas
+                else if (currentIndex === 1) currentIndex = 0; // de áreas pra escritório
+                else currentIndex = 2;                         // de escritório pra diagnóstico
+                
+                updateHighlighter(currentIndex);
+            }, 800); // Espera o undraw terminar
+        }, 4500); // A cada 4.5 segundos
+    }
+
+    // Lógica do Carrossel de Imagens
+    const galleryCarousel = document.getElementById('gallery-carousel');
+    const btnPrev = document.querySelector('.carousel-btn.prev');
+    const btnNext = document.querySelector('.carousel-btn.next');
+
+    if (galleryCarousel && btnPrev && btnNext) {
+        // A cada clique, move a rolagem equivalente a um item (320px + gap 1.5rem = ~344px)
+        const scrollAmount = 344;
+        
+        btnNext.addEventListener('click', () => {
+            galleryCarousel.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+        });
+        
+        btnPrev.addEventListener('click', () => {
+            galleryCarousel.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+        });
     }
 });

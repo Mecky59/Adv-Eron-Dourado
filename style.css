@@ -59,13 +59,13 @@ em {
     padding: 1.5rem 0;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     background: transparent;
-    border-bottom: 1px solid rgba(197, 168, 124, 0.2); /* Linha fina divisória */
+    border-bottom: 2px solid rgba(197, 168, 124, 0.7); /* Linha divisória engrossada para casar com as laterais */
 }
 
 .navbar.scrolled {
     background: rgba(10, 8, 7, 0.85);
     backdrop-filter: blur(16px);
-    border-bottom: 1px solid var(--border);
+    border-bottom: 2px solid var(--border);
     padding: 1rem 0;
 }
 
@@ -106,7 +106,8 @@ em {
 .nav-links {
     display: flex;
     align-items: center;
-    gap: 2.5rem;
+    gap: 0.5rem;
+    position: relative;
 }
 
 .nav-link {
@@ -117,25 +118,39 @@ em {
     text-transform: uppercase;
     transition: color 0.3s;
     position: relative;
-}
-
-.nav-link::after {
-    content: '';
-    position: absolute;
-    bottom: -4px;
-    left: 0;
-    width: 0;
-    height: 1px;
-    background: var(--gold);
-    transition: width 0.3s ease;
+    padding: 0.75rem 1.5rem;
+    z-index: 1;
 }
 
 .nav-link:hover {
     color: var(--gold);
 }
 
-.nav-link:hover::after {
-    width: 100%;
+.nav-links .btn-cta {
+    border-color: transparent;
+    z-index: 1;
+}
+
+.nav-highlighter {
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    transition: transform 0.4s ease, width 0.4s ease, height 0.4s ease;
+    z-index: 0;
+}
+
+.nav-highlighter svg rect {
+    fill: none;
+    stroke: var(--gold);
+    stroke-width: 1px;
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+    transition: stroke-dashoffset 0.8s ease-in-out;
+}
+
+.nav-highlighter.drawn svg rect {
+    stroke-dashoffset: 0;
 }
 
 .mobile-toggle {
@@ -190,6 +205,37 @@ em {
     font-size: 0.85rem;
 }
 
+/* Animação da borda do botão */
+.draw-border-btn {
+    position: relative;
+    border-color: transparent !important;
+}
+
+.btn-border-svg {
+    position: absolute;
+    top: 0; 
+    left: 0;
+    width: 100%; 
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.btn-border-svg rect {
+    fill: none;
+    stroke: var(--gold);
+    stroke-width: 1px;
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+    animation: drawBtnLoop 4s infinite ease-in-out;
+}
+
+@keyframes drawBtnLoop {
+    0%, 15% { stroke-dashoffset: 100; }
+    40%, 80% { stroke-dashoffset: 0; }
+    100% { stroke-dashoffset: 100; }
+}
+
 .wave-char {
     display: inline-block;
 }
@@ -201,14 +247,39 @@ em {
 
 /* Hero */
 .hero {
+    position: relative;
     min-height: 100vh;
     display: flex;
     align-items: center;
     padding-top: 80px;
-    background: radial-gradient(circle at right center, var(--gold-soft), transparent 50%);
+    background: var(--bg-dark);
+    overflow: hidden;
+}
+
+.hero-video-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+    opacity: 0.35; /* Vídeo mais escurecido (antes estava 0.6) */
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at right center, rgba(197, 168, 124, 0.15), rgba(20, 20, 20, 0.95) 60%);
+    z-index: 1;
 }
 
 .hero-container {
+    position: relative;
+    z-index: 2;
     display: grid;
     grid-template-columns: 1.2fr 1.05fr;
     gap: 8rem;
@@ -288,16 +359,16 @@ em {
 .section-divider {
     position: absolute;
     top: 88px; /* Altura da navbar para encostar na linha superior */
-    bottom: 1rem;
+    bottom: 5rem; /* Subindo a linha para deixar espaço embaixo */
     left: 50%;
     transform: translateX(-50%);
     width: calc(100% - 2rem);
     max-width: 1600px;
     height: auto;
     background-color: transparent;
-    border-left: 1px solid rgba(197, 168, 124, 0.3);
-    border-right: 1px solid rgba(197, 168, 124, 0.3);
-    border-bottom: 1px solid rgba(197, 168, 124, 0.3);
+    border-left: 2px solid rgba(197, 168, 124, 0.7);
+    border-right: 2px solid rgba(197, 168, 124, 0.7);
+    border-bottom: 2px solid rgba(197, 168, 124, 0.7);
     margin: 0;
     pointer-events: none;
     z-index: 10;
@@ -362,20 +433,80 @@ em {
     padding: 8rem 0;
 }
 
+.gallery-carousel-wrapper {
+    position: relative;
+    margin-top: 3rem;
+}
+
 .gallery-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 1.5rem;
+    padding-bottom: 2rem; /* Espaço para a barra de rolagem */
+    scrollbar-width: thin;
+    scrollbar-color: var(--gold) rgba(10, 8, 7, 0.5);
+    scroll-behavior: smooth;
+}
+
+/* Estilo da barra de rolagem no Chrome/Safari */
+.gallery-grid::-webkit-scrollbar {
+    height: 8px;
+}
+.gallery-grid::-webkit-scrollbar-track {
+    background: rgba(10, 8, 7, 0.5);
+    border-radius: 4px;
+}
+.gallery-grid::-webkit-scrollbar-thumb {
+    background-color: var(--gold);
+    border-radius: 4px;
 }
 
 .gallery-img-wrapper {
+    flex: 0 0 320px;
+    scroll-snap-align: start;
     overflow: hidden;
-    border-radius: 2px;
+    border-radius: 4px;
+    height: 400px;
+}
+
+/* Botões do carrossel */
+.carousel-btn {
+    position: absolute;
+    top: calc(50% - 1rem);
+    transform: translateY(-50%);
+    background: rgba(10, 8, 7, 0.85);
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.3s ease;
+    font-size: 1.2rem;
+}
+
+.carousel-btn:hover {
+    background: var(--gold);
+    color: var(--bg-darker);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.carousel-btn.prev {
+    left: -24px;
+}
+
+.carousel-btn.next {
+    right: -24px;
 }
 
 .gallery-img {
     width: 100%;
-    height: 350px;
+    height: 100%;
     object-fit: cover;
     opacity: 0.7;
     transition: transform 0.8s ease, opacity 0.5s ease;
@@ -425,27 +556,78 @@ em {
     .hero-container {
         grid-template-columns: 1fr;
         text-align: center;
-        gap: 3rem;
+        gap: 2rem;
+        padding-top: 2rem;
+        padding-bottom: 4rem; /* Garante espaço abaixo da assinatura para a linha não cortar */
+    }
+
+    .hero-content {
+        margin-top: 0; /* Remove a margem negativa que estava empurrando o texto pra cima */
+        align-items: center;
+        text-align: center;
     }
     
     .hero-title {
-        font-size: 2.8rem;
+        font-size: 2.2rem;
     }
     
     .hero-subtitle {
         margin: 0 auto 2.5rem;
+        font-size: 1rem;
+    }
+
+    .hero-actions {
+        display: flex;
+        justify-content: center;
     }
 
     .logo-plaque {
-        max-width: 400px;
+        max-width: 320px;
         margin: 0 auto;
+    }
+
+    .signature-svg {
+        width: 280px;
+        margin: 0 auto;
+    }
+
+    .section-divider {
+        bottom: 2rem; /* No mobile a tela é menor, não precisa de 5rem de espaço abaixo */
     }
 
     .nav-links {
         display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background: rgba(10, 8, 7, 0.98);
+        padding: 2rem;
+        gap: 2rem;
+        text-align: center;
+        border-bottom: 2px solid var(--gold);
+        backdrop-filter: blur(10px);
+    }
+
+    .nav-links.active {
+        display: flex;
     }
 
     .mobile-toggle {
         display: flex;
+        z-index: 200;
+    }
+
+    .mobile-toggle.active .bar:nth-child(1) {
+        transform: translateY(6px) rotate(45deg);
+    }
+    
+    .mobile-toggle.active .bar:nth-child(2) {
+        opacity: 0;
+    }
+    
+    .mobile-toggle.active .bar:nth-child(3) {
+        transform: translateY(-6px) rotate(-45deg);
     }
 }
