@@ -586,13 +586,12 @@ em {
         margin: 0 auto;
     }
 
-    .signature-svg {
-        width: 280px;
-        margin: 0 auto;
+    .signature-container, .signature-svg {
+        display: none !important;
     }
 
     .section-divider {
-        bottom: 2rem; /* No mobile a tela é menor, não precisa de 5rem de espaço abaixo */
+        display: none !important;
     }
 
     .nav-links {
