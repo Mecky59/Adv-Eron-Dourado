@@ -165,11 +165,24 @@ document.addEventListener('DOMContentLoaded', () => {
         const scrollAmount = 344;
         
         btnNext.addEventListener('click', () => {
-            galleryCarousel.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+            const maxScrollLeft = galleryCarousel.scrollWidth - galleryCarousel.clientWidth;
+            // Tolerância de 50px para resolver o bug de subpixel do iOS e scroll-snap
+            if (galleryCarousel.scrollLeft >= maxScrollLeft - 50) {
+                // Chegou no final, volta para a primeira
+                galleryCarousel.scrollTo({ left: 0, behavior: 'smooth' });
+            } else {
+                galleryCarousel.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+            }
         });
         
         btnPrev.addEventListener('click', () => {
-            galleryCarousel.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+            if (galleryCarousel.scrollLeft <= 50) {
+                // Chegou no início, vai para a última
+                const maxScrollLeft = galleryCarousel.scrollWidth - galleryCarousel.clientWidth;
+                galleryCarousel.scrollTo({ left: maxScrollLeft, behavior: 'smooth' });
+            } else {
+                galleryCarousel.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+            }
         });
     }
 });
