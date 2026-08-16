@@ -6,8 +6,8 @@
 }
 
 :root {
-    --bg-dark: #1A0E08; /* Café bem escuro */
-    --bg-darker: #0F0804;
+    --bg-dark: #0A1128; /* Azul marinho escuro (Navy) da referência */
+    --bg-darker: #050814;
     --gold: #C5A87C;
     --gold-bright: #e3c494;
     --gold-soft: rgba(197, 168, 124, 0.08);
