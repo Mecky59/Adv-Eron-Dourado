@@ -672,6 +672,11 @@ em {
         width: 100%;
     }
 
+    .hero {
+        min-height: auto;
+        padding-top: 60px; /* Sobe o conteúdo mais para perto do menu */
+    }
+
     .hero::before {
         width: 100%;
         -webkit-mask-image: none;
@@ -683,9 +688,9 @@ em {
         display: flex;
         flex-direction: column;
         text-align: center;
-        gap: 1rem;
+        gap: 0; /* Tira o gap para o texto colar mais na foto */
         padding-top: 0;
-        padding-bottom: 2rem;
+        padding-bottom: 1rem; /* Reduz espaço inferior */
     }
 
     .hero-visual {
@@ -694,7 +699,7 @@ em {
 
     .hero-content {
         order: 1; /* Texto aparece depois */
-        margin-top: -3rem; /* Sobe um pouco o texto para sobrepor a foto, mas mais baixo que antes */
+        margin-top: -5rem; /* Puxa ainda mais o texto para cima */
         align-items: center;
         text-align: center;
         padding: 2rem 1rem 0; /* Espaço para o fade suave */
@@ -719,7 +724,7 @@ em {
         color: var(--gold);
         text-transform: uppercase;
         font-family: var(--font-serif);
-        margin-bottom: 0.8rem;
+        margin-bottom: 0.5rem; /* Menor margem */
     }
 
     .hero-title em {
@@ -731,8 +736,8 @@ em {
     }
     
     .hero-subtitle {
-        margin: 0 auto 2.5rem;
-        font-size: 0.95rem;
+        margin: 0 auto 1.2rem; /* Reduz margem de 2.5rem para 1.2rem */
+        font-size: 0.9rem; /* Fonte levemente menor para caber melhor */
     }
 
     .hero-title br,
@@ -769,8 +774,8 @@ em {
         position: static;
         height: auto;
         width: 100%;
-        max-width: 450px;
-        margin: 0;
+        max-width: 320px; /* Reduzido de 450px para caber melhor na tela */
+        margin: 0 auto;
         display: block;
         object-position: bottom center;
         transform: scaleX(-1);
