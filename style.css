@@ -509,6 +509,23 @@ em {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: 2rem;
+    max-height: 680px;
+    overflow-y: auto;
+    padding-right: 1rem;
+    scrollbar-width: thin;
+    scrollbar-color: var(--gold) rgba(10, 8, 7, 0.5);
+}
+
+.areas-grid::-webkit-scrollbar {
+    width: 6px;
+}
+.areas-grid::-webkit-scrollbar-track {
+    background: rgba(10, 8, 7, 0.5);
+    border-radius: 4px;
+}
+.areas-grid::-webkit-scrollbar-thumb {
+    background-color: var(--gold);
+    border-radius: 4px;
 }
 
 .area-card {
@@ -837,4 +854,56 @@ em {
     .mobile-toggle.active .bar:nth-child(3) {
         transform: translateY(-6px) rotate(-45deg);
     }
+
+    .areas, .gallery {
+        padding: 4rem 0;
+    }
+
+    .areas-grid {
+        max-height: 65vh;
+        padding-right: 10px;
+        padding-bottom: 1rem;
+        align-content: start;
+    }
+}
+
+/* Area Tags */
+.areas-tags {
+    margin-top: 4rem;
+    text-align: center;
+}
+
+.areas-tags h3 {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    color: var(--gold);
+    margin-bottom: 2rem;
+}
+
+.tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.area-tag {
+    background: rgba(10, 8, 7, 0.4);
+    border: 1px solid var(--border);
+    color: var(--cream);
+    padding: 0.6rem 1.2rem;
+    border-radius: 30px;
+    font-size: 0.85rem;
+    transition: all 0.3s ease;
+    cursor: default;
+}
+
+.area-tag:hover {
+    border-color: var(--gold);
+    color: var(--bg-darker);
+    background: var(--gold);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(197, 168, 124, 0.2);
 }
